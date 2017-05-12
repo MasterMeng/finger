@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <script type="text/javascript" src="../../static/client.min.js"></script>
+    <script>
+    function getFingerprint()
+    {
+        var client = new ClientJS();
+        var fingerprint = client.getFingerprint();
+        return fingerprint;
+    }
+    function getSystem()
+    {
+        var client = new ClientJS();
+        var os = client.getOS();
+        return os;
+    }
+    function getSystemVer()
+    {
+        var client = new ClientJS();
+        var os_ver = client.getOSVersion();
+        return os_ver;
+    }
+    function getBrow()
+    {
+        var client = new ClientJS(); 
+        var browser = client.getBrowser();
+        return browser; 
+    }
+    function getBrowVersion()
+    {
+        var client = new ClientJS(); 
+        var browser_ver = client.getBrowserVersion();
+        return browser_ver;
+    }
+
+    function hasCookie(name)
+    {
+        var arr,reg = new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg))
+            return Boolean(1);
+        else
+            return Boolean(0)
+    }
+    function setCookie(name,value)
+    {
+        var Days = 7;
+        var exp = new Date();
+        exp.setTime(exp.getTime()+Days*24*60*60*1000);
+        document.cookie = escape(name) + "="+ escape (value) + ";expires=" + exp.toGMTString(); 
+    }
+    function getCookie(name) 
+    {
+        var arr,reg = new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+    function delCookie(name)
+    {
+        var exp = new Date(); 
+        exp.setTime(exp.getTime() - 1); 
+        var cval=getCookie(name); 
+        if(cval!=null) 
+            document.cookie= name + "="+cval+";expires="+exp.toGMTString(); 
+    }
+    function change()
+    {
+        document.getElementById('id_finger').value = getFingerprint();
+        document.getElementById('id_os').value = getSystem();
+        document.getElementById('id_os_ver').value = getSystemVer();
+        document.getElementById('id_browser').value = getBrow();
+        document.getElementById('id_browser_ver').value = getBrowVersion();
+        if(hasCookie('finger'))
+            alert(getCookie('finger'));
+        else
+            setCookie('finger',getFingerprint());
+    }
+    </script>
+</head>
+<body>   
+    <script>window.onload=function()
+    {
+        change();
+    }
+    </script>
+    
+    <form method='post'>
+        <table>
+            {% csrf_token %}
+            {{form}}
+        </table>       
+        <button type="submit">提交</button>
+    </form>
+</body>
+</html>
