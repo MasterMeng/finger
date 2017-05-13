@@ -80,15 +80,8 @@ WSGI_APPLICATION = 'finger.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'blackIP',
-        'USER':'root',
-        'PASSWORD':',.klio89',
-        'HOST':'114.215.41.232',
-        'PORT':'',
-        'OPTIONS':{
-            'autocommit':True,
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR,'db.sqlite3'),
     }
 }
 
