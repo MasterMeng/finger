@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf.urls import url,include
 from django.contrib import admin
 from hello import views as hello_views
+from blackIP import views as blackIP_views
 
 
 urlpatterns = [
     url(r'^$',hello_views.hello,name='hello'),
     url(r'^admin/', admin.site.urls),
+    url(r'^blackIP/',blackIP_views.getStatus,name='getStatus')
 ]
