@@ -25,13 +25,13 @@
     }
     function getBrow()
     {
-        var client = new ClientJS(); 
+        var client = new ClientJS();
         var browser = client.getBrowser();
-        return browser; 
+        return browser;
     }
     function getBrowVersion()
     {
-        var client = new ClientJS(); 
+        var client = new ClientJS();
         var browser_ver = client.getBrowserVersion();
         return browser_ver;
     }
@@ -44,29 +44,7 @@
         else
             return Boolean(0)
     }
-    function setCookie(name,value)
-    {
-        var Days = 7;
-        var exp = new Date();
-        exp.setTime(exp.getTime()+Days*24*60*60*1000);
-        document.cookie = escape(name) + "="+ escape (value) + ";expires=" + exp.toGMTString(); 
-    }
-    function getCookie(name) 
-    {
-        var arr,reg = new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-        if(arr = document.cookie.match(reg))
-            return unescape(arr[2]);
-        else
-            return null;
-    }
-    function delCookie(name)
-    {
-        var exp = new Date(); 
-        exp.setTime(exp.getTime() - 1); 
-        var cval=getCookie(name); 
-        if(cval!=null) 
-            document.cookie= name + "="+cval+";expires="+exp.toGMTString(); 
-    }
+
     function change()
     {
         document.getElementById('id_finger').value = getFingerprint();
@@ -74,26 +52,22 @@
         document.getElementById('id_os_ver').value = getSystemVer();
         document.getElementById('id_browser').value = getBrow();
         document.getElementById('id_browser_ver').value = getBrowVersion();
-        if(hasCookie('finger'))
-            alert(getCookie('finger'));
-        else
-            setCookie('finger',getFingerprint());
     }
     </script>
 </head>
-<body>   
+<body>
     <script>window.onload=function()
     {
         change();
     }
     </script>
-    
+
     <form method='post'>
         <table>
             {% csrf_token %}
             {{form}}
-        </table>       
-        <button type="submit">提交</button>
+        </table>
+        <button type="submit">注册</button>
     </form>
 </body>
 </html>

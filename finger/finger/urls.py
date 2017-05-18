@@ -22,5 +22,6 @@ from blackIP import views as blackIP_views
 urlpatterns = [
     url(r'^$',hello_views.hello,name='hello'),
     url(r'^admin/', admin.site.urls),
-    url(r'^blackIP/',blackIP_views.getStatus,name='getStatus')
+    url(r'^blackIP/',blackIP_views.getStatus,name='getStatus'),
+    url(r'^index/',hello_views.index,name='index')
 ]

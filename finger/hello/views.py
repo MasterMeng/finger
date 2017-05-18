@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
+from django.template import RequestContext
 from .forms import FingerForm
 import os
 import pymysql
 # Create your views here.
 
-def is_exist(fingerprint):
+def updateCountNum(fingerprint):
     conn = pymysql.connect(host='127.0.0.1',port=3306,user='root',password=',.klio89',db='fingerprint')
     try:
         with conn.cursor() as cursor:
@@ -34,21 +35,44 @@ def insert(str1,str2,str3,str4,str5):
         conn.close()
 
 def hello(request):
+    fingerCookie = request.COOKIES.get('fingerCookie','')
     if request.method == 'POST':
-        form = FingerForm(request.POST)
-        if form.is_valid():
-            finger = form.cleaned_data['finger']
-            os = form.cleaned_data['os']
-            os_ver = form.cleaned_data['os_ver']
-            browser = form.cleaned_data['browser']
-            browser_ver = form.cleaned_data['browser_ver']
+            form = FingerForm(request.POST)
+            if form.is_valid():
+                finger = form.cleaned_data['finger']
+                os = form.cleaned_data['os']
+                os_ver = form.cleaned_data['os_ver']
+                browser = form.cleaned_data['browser']
+                browser_ver = form.cleaned_data['browser_ver']
 
-            if is_exist(str(finger)):
-                return render(request,"exist.html")
-            else:
-                insert(str(finger),os,str(os_ver),browser,str(browser_ver))
-                return render(request,"bye.html")
+                cookie = finger+'|'+os+'|'+browser
+                if fingerCookie == cookie:
+                    updateCountNum(finger)
+                    return render(request,"exist.html")
+                else:
+                    response = HttpResponseRedirect('index/')
+                    response.set_cookie('fingerCookie',cookie,3600)
+
+                    insert(str(finger),os,str(os_ver),browser,str(browser_ver))
+                    return response
     else:
         form = FingerForm()
     return render(request,'hello.html',{'form':form})
+
+def index(request):
+    return render(request,"bye.html")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
