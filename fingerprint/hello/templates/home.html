@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>cookie</title>
+	<script type="text/javascript" src="../../static/client.min.js"></script>
+    <script type="text/javascript" src="../../static/fingerprint2.min.js"></script>
+    <script>
+    	function getFingerprint()
+    {
+        var client = new ClientJS();
+        var fingerprint = client.getFingerprint();
+        return fingerprint;
+    }
+    function getSystem()
+    {
+        var client = new ClientJS();
+        var os = client.getOS();
+        return os;
+    }
+    function getSystemVer()
+    {
+        var client = new ClientJS();
+        var os_ver = client.getOSVersion();
+        return os_ver;
+    }
+    function getBrow()
+    {
+        var client = new ClientJS();
+        var browser = client.getBrowser();
+        return browser;
+    }
+    function getBrowVersion()
+    {
+        var client = new ClientJS();
+        var browser_ver = client.getBrowserVersion();
+        return browser_ver;
+    }
+
+    function hasCookie(name)
+    {
+        var arr,reg = new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg))
+            return Boolean(1);
+        else
+            return Boolean(0)
+    }
+
+    function change()
+    {
+        document.getElementById('id_finger').value = getFingerprint();
+        document.getElementById('id_os').value = getSystem();
+        document.getElementById('id_os_ver').value = getSystemVer();
+        document.getElementById('id_browser').value = getBrow();
+        document.getElementById('id_browser_ver').value = getBrowVersion();
+        var client = new ClientJS();
+        document.getElementById('canvas').value = client.getCanvasPrint();
+        var cpu = client.getCPU();
+        if(!cpu)
+            cpu = 'NULL';
+        document.getElementById('id_CPU').value = cpu;
+        document.getElementById('id_device').value = client.getDevice();
+
+        new Fingerprint2().get(function(result,compinents){
+            console.log(result);
+            console.log(compinents);
+        });
+    }
+    </script>
+	{% load staticfiles %}
+	<script src="{% static 'django_evercookie/swfobject-2.2.min.js' %}"></script>
+	<script src="{% url 'django_evercookie.views.evercookie_core' %}"></script>
+	{% load evercookie_js_api %}
+	{% set_evercookie ec_obj='evercookie' name='dummy' value='some_value' %}
+
+	{% load staticfiles %}
+	<script src="{% static 'django_evercookie/swfobject-2.2.min.js' %}"></script>
+	<script src="{% url 'django_evercookie.views.evercookie_core' %}"></script>
+	{% load evercookie_js_api %}
+	{% rediscover_evercookie ec_obj='evercookie' name='dummy' %}
+
+	<script type="text/javascript">
+		function getLocalStorage()
+		{
+			alert(localStorage.getItem("dummy"));
+		}
+		function getSessionStorage()
+		{
+			alert(sessionStorage.getItem("dummy"));
+		}
+		function getSQLite() {
+			var database = openDatabase("sqlite_evercookie","","evercookie",1024*1024);
+			if(!database)
+				alert("Failed");
+			else
+			{
+				database.transaction(function (context) {
+						console.log("start sqlite");
+					context.executeSql('SELECT * FROM cache',[],function (context,results) {
+						var len = results.rows.length,i;
+						for(i = 0; i< len;++i)
+						{
+							//console.log(results.rows.item(i));
+							alert('id: '+ results.rows.item(i).id);
+							//console.log('name: '+ results.rows.item(i).name);
+							if(results.rows.item(i).name == 'dummy')
+								alert('value: '+ results.rows.item(i).value);
+						}
+					});
+				})
+			}
+		}
+	</script>
+</head>
+<body>
+<div>
+
+	<h1>Welcome</h1>
+	<script>window.onload=function()
+    {
+        change();
+    }
+    </script>
+    <form method='post'>
+        <table>
+            {% csrf_token %}
+            {{form}}
+        </table>
+        <button type="submit">注册</button>
+    </form>
+
+	<button onclick="getLocalStorage()">getLocalStorage</button>
+	<button onclick="getSessionStorage()">getSessionStorage</button>
+	<button onclick="getSQLite()">getSQLite</button>
+	<h2>
+		<br><label for="canvas">canvas</label>
+		<br><textarea name="canvas" id="canvas" cols="100" rows="30"></textarea>
+	</h2>
+</div>
+
+</body>
+</html>
