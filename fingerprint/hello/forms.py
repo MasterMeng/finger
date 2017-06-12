@@ -11,6 +11,7 @@ class FingerForm(forms.Form):
     browser_ver = forms.CharField()
     CPU = forms.CharField()
     device = forms.CharField()
+    canvas = forms.CharField()
 
     class Meta:
         model = Finger

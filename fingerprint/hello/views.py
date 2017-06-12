@@ -5,5 +5,6 @@ from .forms import FingerForm
 
 
 def home(request):
+	print(request.COOKIES)
 	form = FingerForm()
 	return render(request,'home.html',{'form':form})

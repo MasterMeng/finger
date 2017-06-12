@@ -10,3 +10,4 @@ class Finger(models.Model):
     browser_ver = models.CharField(max_length=20,null=True)
     CPU = models.CharField(max_length=20,null=True)
     device = models.CharField(max_length=20,null=True)
+    canvas = models.CharField(max_length=20,null=True)

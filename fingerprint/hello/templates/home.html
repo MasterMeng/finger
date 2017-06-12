@@ -3,8 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>cookie</title>
-	<script type="text/javascript" src="../../static/client.min.js"></script>
-    <script type="text/javascript" src="../../static/fingerprint2.min.js"></script>
+	<script type="text/javascript" src="../static/client.min.js"></script>
+    <script type="text/javascript" src="../static/fingerprint2.min.js"></script>
+    <script type="text/javascript" src="../static/md5.min.js"></script>
     <script>
     	function getFingerprint()
     {
@@ -48,18 +49,22 @@
 
     function change()
     {
+        var client = new ClientJS();
+        document.getElementById('canvas').value = client.getCanvasPrint();
+
         document.getElementById('id_finger').value = getFingerprint();
         document.getElementById('id_os').value = getSystem();
         document.getElementById('id_os_ver').value = getSystemVer();
         document.getElementById('id_browser').value = getBrow();
         document.getElementById('id_browser_ver').value = getBrowVersion();
-        var client = new ClientJS();
-        document.getElementById('canvas').value = client.getCanvasPrint();
+        document.getElementById('id_canvas').value = md5(client.getCanvasPrint());
         var cpu = client.getCPU();
         if(!cpu)
             cpu = 'NULL';
         document.getElementById('id_CPU').value = cpu;
         document.getElementById('id_device').value = client.getDevice();
+
+        //alert("windows.name = " + window.name);
 
         new Fingerprint2().get(function(result,compinents){
             console.log(result);
@@ -71,6 +76,7 @@
 	<script src="{% static 'django_evercookie/swfobject-2.2.min.js' %}"></script>
 	<script src="{% url 'django_evercookie.views.evercookie_core' %}"></script>
 	{% load evercookie_js_api %}
+    var values = getBrow();
 	{% set_evercookie ec_obj='evercookie' name='dummy' value='some_value' %}
 
 	{% load staticfiles %}
@@ -103,8 +109,8 @@
 							//console.log(results.rows.item(i));
 							alert('id: '+ results.rows.item(i).id);
 							//console.log('name: '+ results.rows.item(i).name);
-							if(results.rows.item(i).name == 'dummy')
-								alert('value: '+ results.rows.item(i).value);
+							//if(results.rows.item(i).name == 'dummy')
+							//	alert('value: '+ results.rows.item(i).value);
 						}
 					});
 				})
@@ -114,7 +120,6 @@
 </head>
 <body>
 <div>
-
 	<h1>Welcome</h1>
 	<script>window.onload=function()
     {
